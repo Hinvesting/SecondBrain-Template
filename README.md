@@ -2,7 +2,7 @@
 
 A modular, local-first operating system and multi-agent content pipeline designed for software engineers, technical founders, and builders. 
 
-This repository is the public template derivative of a production SecondBrain vault, stripped of private logs and credentials, giving you a ready-to-deploy foundation for knowledge management and automated media production.
+This repository is the public template derivative of a production SecondBrain vault. You can clone this repository to establish your own local knowledge vault and utilize the included `requirements.txt` to install the exact Python dependencies needed for your automation engines.
 
 ## What It Is
 SecondBrain is a local Markdown-first knowledge vault (fully compatible with Obsidian) paired with a Python-powered automation toolkit. It bridges the gap between raw engineering notes, automated audio generation, and short-form video prompt engineering.
@@ -14,35 +14,48 @@ SecondBrain is a local Markdown-first knowledge vault (fully compatible with Obs
 * **Automated Audio Overviews:** Includes a robust CLI engine wrapping third-party tools (`notebooklm-py`) to automatically ingest Markdown notes, handle session auth, track context IDs, and compile professional podcast episodes.
 * **Knowledge Organization:** Features a clean, structured directory layout optimized for rapid capture, long-term maintenance, and graph-view visualization.
 
+---
+
 ## Why It's Useful
 If you build in public, manage complex technical projects, or want to automate your content creation workflows without sacrificing architectural integrity, this template provides:
 1. **Zero-Bloat Knowledge Management:** Keep your notes local, secure, and searchable.
 2. **Instant Content Repurposing:** Turn system logs and bug fixes into production-ready video scripts and podcasts with a single terminal command.
 3. **Robust CLI Automation:** Handle brittle third-party API rebrands and session management with built-in Playwright resiliency and regex parsing.
 
-## Quick Start Guide
+---
+
+## Quick Start & Installation Guide
+
+To set this up for your own vault, follow these steps to clone the template and stock your environment with the required dependencies:
 
 ### 1. Prerequisites
 * Python 3.10+
 * Git & GitHub CLI (`gh`)
 
-### 2. Clone and Setup
+### 2. Clone the Template for Your Vault
+Clone the public template repository into your local machine to initialize your own vault structure:
 ```bash
-git clone [https://github.com/Hinvesting/SecondBrain-Template.git](https://github.com/Hinvesting/SecondBrain-Template.git)
-cd SecondBrain-Template
+git clone [https://github.com/Hinvesting/SecondBrain-Template.git](https://github.com/Hinvesting/SecondBrain-Template.git) my-second-brain
+cd my-second-brain
 
-# Set up virtual environment
+
+3. Set Up the Virtual Environment and Install Requirements
+Stock your local environment with the required automation packages defined in requirements.txt:
+Bash
+# Create and activate your virtual environment (.venv)
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install dependencies
+# Upgrade pip and install all required automation dependencies
 pip install --upgrade pip
-pip install "notebooklm-py[browser]" playwright
+pip install -r requirements.txt
+
+# Install browser automation binaries for audio/podcast engines
 playwright install
 
 
-3. Usage Example
-Run the dual-agent content pipeline on any operational markdown log:
+4. Usage Example
+Run the dual-agent content pipeline on any operational markdown log in your new vault:
 Bash
 python scripts/content_agent.py 00-Inbox/your_log_file.md
 
@@ -52,6 +65,7 @@ Plaintext
 ├── 00-Inbox/        # Raw operational logs, scratchpads, and quick captures
 ├── 99-System/       # System scripts, media outputs, and configuration assets
 ├── scripts/         # Automation engines (podcast compiler, dual-agent pipeline)
+├── requirements.txt # Python package dependencies for all automation scripts
 ├── LICENSE          # MIT License
 └── README.md        # Documentation
 
