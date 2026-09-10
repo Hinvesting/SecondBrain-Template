@@ -1,0 +1,69 @@
+# ------------------------------------------------------------
+# Secrets and credentials
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+*credentials*.json
+*secrets*.json
+*token*.json
+
+# ------------------------------------------------------------
+# Python / local environments
+# ------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ------------------------------------------------------------
+# Local databases / search indexes / embeddings
+# ------------------------------------------------------------
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.npy
+index.json
+
+# ------------------------------------------------------------
+# Runtime, generated output, logs, backups, repair state
+# ------------------------------------------------------------
+logs/
+Logs/
+backups/
+Backups/
+repairs/
+runtime/
+outputs/
+evidence/
+*.log
+*.tmp
+*.partial
+
+# ------------------------------------------------------------
+# Obsidian machine-specific workspace state
+# Keep normal vault settings if you choose, but do not publish
+# machine/session state by accident.
+# ------------------------------------------------------------
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+
+# ------------------------------------------------------------
+# OS/editor noise
+# ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
