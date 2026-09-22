@@ -1,70 +1,91 @@
 # Start Here
 
-Welcome to your SecondBrain starter vault.
+Welcome to your SecondBrain. Two things live in this folder:
 
-You do not need to understand Git, Python, APIs, or automation to use this template. At its simplest, this is just a well-organized folder of Markdown notes that Obsidian can open as a vault.
+1. A **vault** — plain Markdown notes, openable in Obsidian.
+2. A **brain** — Python scripts that index and search those notes locally.
 
-## Your first five minutes
+You can use the vault alone if you want. The brain makes it searchable by meaning and reachable from Telegram.
 
-1. Open this folder in Obsidian using **Open folder as vault**.
-2. Open `00-Inbox/README.md` and create your first note in `00-Inbox`.
-3. Add a link to another note using `[[Note Name]]`.
-4. Open Obsidian's Graph view to see links between notes.
-5. Move notes into the folders that fit them best as your vault grows.
+## Minute one: open the vault
 
-## What each main folder means
+If you have Obsidian:
+- **Open folder as vault** → pick this folder.
 
-- `00-Inbox` — quick capture before you decide where something belongs.
-- `10-Projects` — active work with a clear outcome.
-- `20-Areas` — ongoing responsibilities without a finish date.
-- `30-Resources` — reusable information and reference material.
-- `40-Archive` — completed or inactive material.
-- `50-Doctrines` — rules, SOPs, principles, and decision guides.
-- `60-References` — source notes and external references.
-- `70-Glossary` — terms and definitions.
-- `80-People` — optional relationship/contact notes.
-- `90-Library` — books, papers, long-form material, and collections.
-- `templates` — reusable starter note formats.
+Browse the numbered folders. Each has a `README.md` explaining what goes there.
 
-## A simple example
+## Minute five: set up the brain (optional)
 
-Create a note named:
+You need Python 3.11+ and Ollama.
 
-```text
-00-Inbox/Learn Obsidian.md
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-Add:
+Install Ollama from https://ollama.com, then:
 
-```markdown
-# Learn Obsidian
-
-I want to learn how links and graph view work.
-
-Related: [[SecondBrain Principles]]
+```bash
+ollama pull nomic-embed-text
+ollama pull llama3.1
 ```
 
-Then create:
+## Minute ten: connect Telegram
 
-```text
-50-Doctrines/SecondBrain Principles.md
+1. Message @BotFather on Telegram, create a bot, copy the token.
+2. Message @userinfobot, copy your numeric user ID.
+3. `cp .env.example .env` and fill in both values.
+
+## Minute fifteen: run it
+
+```bash
+python3 scripts/brain.py reindex
+python3 scripts/telebot.py
 ```
 
-Add:
+Open Telegram, find your bot, and:
 
-```markdown
-# SecondBrain Principles
-
-- Capture quickly.
-- Keep knowledge in plain Markdown.
-- Link ideas when the relationship is useful.
-- Organize only as much as necessary.
+```
+/save Testing my new second brain
 ```
 
-Obsidian will now show a relationship between the two notes.
+Then:
 
-## Important privacy rule
+```
+/ask what did I just save
+```
 
-Do not place passwords, API keys, access tokens, private keys, recovery codes, or other secrets in notes you plan to commit to Git.
+## The daily loop
 
-Read `SECURITY.md` before publishing a customized vault.
+- Capture on Telegram with `/save`, or drop a `.md` file into `00-Inbox/`.
+- Ask questions with `/ask`.
+- Open Obsidian to browse and link notes.
+
+That's it. The brain handles the rest.
+
+## Folder meanings
+
+- `00-Inbox` — landing zone for new captures
+- `10-Projects` — has a defined end
+- `20-Areas` — ongoing responsibilities
+- `30-Resources` — reference material
+- `40-Archive` — done or inactive
+- `50-Doctrines` — rules and SOPs
+- `60-References` — sources
+- `70-Glossary` — terms
+- `80-People` — optional contacts
+- `90-Library` — books, papers, collections
+- `templates` — reusable note starters
+
+## When something breaks
+
+- `brain.py status` tells you if the index is healthy.
+- If `reindex` fails on a large file, you can exclude it — see `README.md`.
+- Ollama must be running (`ollama serve` or the desktop app).
+
+## Where to go next
+
+- Read `SECURITY.md` for the privacy model.
+- Read `README.md` for the CLI reference.
+- Organize over time. The structure is a suggestion, not a rule.
