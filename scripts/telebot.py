@@ -67,14 +67,25 @@ TelegramCallback = Callable[
 
 
 def _load_env() -> None:
-    for candidate in (VAULT / ".env", Path.cwd() / ".env"):
+    """Load credentials from every standard location.
+
+    Search order (first-hit-wins per key):
+      1. $SB_VAULT_PATH/.env       (or ~/SecondBrain/.env)
+      2. ~/.config/secondbrain-engine/engine.env
+      3. ./.env in the current directory
+
+    override=False means later files only fill gaps, they never clobber
+    earlier values. Shell-exported variables still win over all of them.
+    """
+    candidates = [
+        VAULT / ".env",
+        Path.home() / ".config" / "secondbrain-engine" / "engine.env",
+        Path.cwd() / ".env",
+    ]
+    for candidate in candidates:
         if candidate.is_file():
             load_dotenv(candidate, override=False)
-            return
-
-
-_load_env()
-
+_load_env
 
 def cfg(key: str, default: str | None = None) -> str | None:
     v = os.environ.get(key)
@@ -110,12 +121,51 @@ def chat_model() -> str:
 log = logging.getLogger("secondbrain.bot")
 
 
+_TOKEN_URL_RE = re.compile(r"/bot\d+:[A-Za-z0-9_-]+")
+
+
+class _RedactToken(logging.Filter):
+    """Redact Telegram bot tokens from log records before emission.
+
+    httpx and python-telegram-bot log every request URL at INFO level.
+    Those URLs contain the bot token; without this filter, running the bot
+    leaks the credential to stdout, journald, and any log file it's piped to.
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if isinstance(record.msg, str):
+            record.msg = _TOKEN_URL_RE.sub("/bot<REDACTED>", record.msg)
+
+        args = record.args
+        if args:
+            if isinstance(args, dict):
+                record.args = {
+                    k: _TOKEN_URL_RE.sub("/bot<REDACTED>", v)
+                    if isinstance(v, str)
+                    else v
+                    for k, v in args.items()
+                }
+            elif isinstance(args, tuple):
+                record.args = tuple(
+                    _TOKEN_URL_RE.sub("/bot<REDACTED>", a)
+                    if isinstance(a, str)
+                    else a
+                    for a in args
+                )
+        return True
+
+
 def _configure_logging() -> None:
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(message)s",
-        handlers=[logging.StreamHandler(sys.stdout)],
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(
+        logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
     )
+    handler.addFilter(_RedactToken())
+
+    root = logging.getLogger()
+    root.handlers.clear()
+    root.setLevel(logging.INFO)
+    root.addHandler(handler)
 
 
 # --- auth -----------------------------------------------------------
